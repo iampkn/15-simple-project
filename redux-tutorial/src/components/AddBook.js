@@ -1,14 +1,27 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addBook } from "../store/slices/bookSlice";
 
 function AddBook() {
-  const [books, setBooks] = useState([]);
-  const [authors, setAuthors] = useState([]);
-  const [rating, setRating] = useState([]);
-  function handleInput(e) {
-    setBooks(e.target.value);
-  }
+  const [title, setTitle] = useState([]);
+  const [author, setAuthors] = useState([]);
+  const [rating, setRating] = useState("5");
 
-  function handleSubmit(e) {}
+  const dispatch = useDispatch();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(
+      addBook({
+        title,
+        author,
+        rating,
+      })
+    );
+  };
+
+  function handleInput(e) {
+    setTitle(e.target.value);
+  }
   return (
     <div className="">
       <form action="">
@@ -16,7 +29,7 @@ function AddBook() {
           <label htmlFor="label">Lable</label>
           <input
             type="text"
-            value={books}
+            value={title}
             className="book-input"
             onChange={handleInput}
             placeholder="Adding the name of book"
@@ -26,7 +39,7 @@ function AddBook() {
           <label htmlFor="Author">Author</label>
           <input
             type="text"
-            value={authors}
+            value={author}
             className="book-input"
             onChange={(e) => {
               setAuthors(e.target.value);
