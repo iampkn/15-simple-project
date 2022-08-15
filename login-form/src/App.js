@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux"
-import Login from "./components/Login"
 import LoginWithEmail from "./components/LoginMethod/LoginType/LoginWithEmail"
 import LoginWithUserName from "./components/LoginMethod/LoginType/LoginWithUserName"
 import { Logout } from "./components/Logout"
