@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import TextError from "./TextError"
@@ -12,9 +12,7 @@ const initialValues = {
 }
 
 const validationSchema = Yup.object({
-   username: Yup.string()
-      .required("Please enter your username")
-      .min(6, "Too short"),
+   username: Yup.string().min(6, "Too short"),
    email: Yup.string().email().required("Please enter your email"),
    password: Yup.string()
       .required("Please enter your password")
@@ -30,14 +28,26 @@ const validationSchema = Yup.object({
 })
 
 function Register() {
+   const [msg, setMsg] = useState()
+
    const onSubmit = (values) => {
       console.log("Wait for post")
       handlePost(values)
    }
 
    async function handlePost(values) {
-      const respose = await api.post("/users", values)
+      const { username, email, password } = values
+      const respose = await api.post(
+         "/users",
+         JSON.stringify({ username, email, password }),
+         {
+            headers: { "Content-type": "application/json" },
+         }
+      )
       console.log("Post data", respose)
+      if (respose.status === 201) {
+         setMsg("Congratulations, your account has been successfully created.")
+      }
    }
 
    return (
@@ -48,6 +58,7 @@ function Register() {
       >
          <Form>
             <h1>Register form</h1>
+            {msg ? msg : null}
             <div>
                <label htmlFor='username'>User Name</label>
                <Field type='text' name='username' id='username' />
