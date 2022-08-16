@@ -11,45 +11,58 @@ const withLogin = (WrappedComponent) => {
                prop2: "",
             },
             LOGIN_URL: "/auth/login",
-            setErrMsg: "",
+            errMsg: "",
+            typeLogin: "",
          }
       }
 
-      Login = async (prop1, prop2) => {
-         try {
-            const response = await api.post(
-               this.state.LOGIN_URL,
-               JSON.stringify({ prop1, prop2 }),
-               {
-                  headers: { "Content-Type": "application/json" },
-               }
-            )
-            console.log(response.data)
-         } catch (error) {
-            if (!error?.response) {
-               this.state.setErrMsg("No sever response")
-            } else if (error.response?.status === 400) {
-               this.state.setErrMsg("Wrong Email or Password")
-            } else if (error.response?.status === 401) {
-               this.state.setErrMsg("Unauthorized")
-            } else {
-               this.state.setErrMsg("Login Failed")
-            }
-         }
+      setTypeLogin = (type) => {
+         this.setState(() => {
+            return { typeLogin: type }
+         })
       }
-      setPathLogin = (path) => {
-         this.setState((prevState) => {
-            return { LOGIN_URL: prevState + path }
+
+      setErrMsg = (err) => {
+         this.setState(() => {
+            return { errMsg: err }
          })
       }
 
       render() {
-         const { initialValues, LOGIN_URL } = this.state
+         const { initialValues, errMsg, LOGIN_URL } = this.state
+         const handleSetErr = this.setErrMsg.bind(this)
+
+         async function Login(prop1, prop2) {
+            try {
+               console.log("Login")
+               const response = await api.post(
+                  LOGIN_URL,
+                  JSON.stringify({ email: prop1, password: prop2 }),
+                  {
+                     headers: { "Content-Type": "application/json" },
+                  }
+               )
+               console.log(response)
+            } catch (error) {
+               if (!error?.response) {
+                  handleSetErr("No sever response")
+               } else if (error.response?.status === 400) {
+                  handleSetErr("Wrong Email or Password")
+               } else if (error.response?.status === 401) {
+                  handleSetErr("Unauthorized")
+               } else {
+                  handleSetErr("Login Failed")
+               }
+            }
+         }
          return (
-            <WrappedComponent
-               initialValues={initialValues}
-               LOGIN_URL={LOGIN_URL}
-            />
+            <div>
+               <WrappedComponent
+                  initialValues={initialValues}
+                  ErrMsg={errMsg}
+                  Login={Login}
+               />
+            </div>
          )
       }
    }

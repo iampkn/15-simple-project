@@ -26,7 +26,9 @@ const validationLoginWithUserName = Yup.object({
 })
 
 const validationLoginWithEmail = Yup.object({
-   email: Yup.string().email().required("Please enter your email"),
+   email: Yup.string()
+      .email("Invalid email")
+      .required("Please enter your email"),
    // password: Yup.string()
    //    .required("Please enter your password")
    //    .min(8, "Password is too short - should be 8 characters minimun")
@@ -85,7 +87,6 @@ function Login() {
          }
       }
    }
-
    if (loginType) {
       return (
          <Formik
