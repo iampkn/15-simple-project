@@ -6,11 +6,11 @@ function FormikControl(props) {
    switch (control) {
       case "input":
          return <Input {...rest} />
-      case "textarea":
-      case "select":
-      case "radio":
-      case "checkbox":
-      case "date":
+      case "textarea":return <Input {...rest} />
+      case "select":return <Input {...rest} />
+      case "radio":return <Input {...rest} />
+      case "checkbox":return <Input {...rest} />
+      case "date":return <Input {...rest} />
       default:
          return null
    }

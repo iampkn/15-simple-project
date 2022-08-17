@@ -1,8 +1,10 @@
 import React from "react"
+import withLogin from "../withLogin"
 import WithLoginFn from "../WithLoginFn"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import TextError from "../../TextError"
+
 
 const validationLoginWithEmail = Yup.object({
    prop1: Yup.string()
@@ -18,6 +20,7 @@ const validationLoginWithEmail = Yup.object({
 })
 
 const LoginWithEmail = (props) => {
+
    return (
       <Formik
          initialValues={props.initialValues}
@@ -28,17 +31,18 @@ const LoginWithEmail = (props) => {
             <div>
                <h1>Login form</h1>
                <h1>{props.ErrMsg ? props.ErrMsg : null}</h1>
+             
             </div>
 
             <div>
-               <label htmlFor='prop1'>Email</label>
-               <Field type='text' name='prop1' id='prop1' />
+               <label htmlFor='email'>Email</label>
+               <Field type='text' name='prop1' id='email' />
                <ErrorMessage name='prop1' component={TextError} />
             </div>
             <div>
                <label htmlFor='password'>Password</label>
                <Field type='password' name='prop2' id='password' />
-               <ErrorMessage name='password' component={TextError} />
+               <ErrorMessage name='prop2' component={TextError} />
             </div>
             <button type='submit'>Submit</button>
          </Form>

@@ -13,6 +13,7 @@ const withLogin = (WrappedComponent) => {
             LOGIN_URL: "/auth/login",
             errMsg: "",
             typeLogin: "",
+            data:[],
          }
       }
 
@@ -27,10 +28,21 @@ const withLogin = (WrappedComponent) => {
             return { errMsg: err }
          })
       }
+      setData = (data)=>{
+         this.setState(() => {
+            return { data: data }
+         })
+      }
 
       render() {
-         const { initialValues, errMsg, LOGIN_URL } = this.state
+         const { initialValues, errMsg, LOGIN_URL, data } = this.state
          const handleSetErr = this.setErrMsg.bind(this)
+         const handleSetData = this.setData.bind(this)
+         function onSubmit(values){
+            console.log(values)
+               const { prop1, prop2 } = values
+               Login(prop1, prop2)
+           }
          
          async function Login(prop1, prop2) {
             try {
@@ -42,7 +54,7 @@ const withLogin = (WrappedComponent) => {
                      headers: { "Content-Type": "application/json" },
                   }
                )
-               console.log(response)
+               handleSetData(response.data)
             } catch (error) {
                if (!error?.response) {
                   handleSetErr("No sever response")
@@ -60,7 +72,8 @@ const withLogin = (WrappedComponent) => {
                <WrappedComponent
                   initialValues={initialValues}
                   ErrMsg={errMsg}
-                  Login={Login}
+                 onSubmit={onSubmit}
+                 UserData={data}
                />
             </div>
          )
