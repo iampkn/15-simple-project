@@ -3,7 +3,7 @@ import { Formik, Form } from "formik"
 import * as Yup from "yup"
 import FormikControl from "./FormikControl"
 
-function FomikContainer() {
+function FormikContainer() {
    const initialValues = {
       email: "",
    }
@@ -32,4 +32,4 @@ function FomikContainer() {
    )
 }
 
-export default FomikContainer
+export default FormikContainer

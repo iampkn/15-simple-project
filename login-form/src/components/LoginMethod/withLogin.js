@@ -31,7 +31,7 @@ const withLogin = (WrappedComponent) => {
       render() {
          const { initialValues, errMsg, LOGIN_URL } = this.state
          const handleSetErr = this.setErrMsg.bind(this)
-
+         
          async function Login(prop1, prop2) {
             try {
                console.log("Login")

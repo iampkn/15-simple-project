@@ -1,5 +1,5 @@
 import React from "react"
-import withLogin from "../withLogin"
+import WithLoginFn from "../WithLoginFn"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import TextError from "../../TextError"
@@ -10,7 +10,7 @@ const validationLoginWithEmail = Yup.object({
       .required("Please enter your email"),
    // password: Yup.string()
    //    .required("Please enter your password")
-   //    .min(8, "Password is too short - should be 8 characters minimun")
+   //    .min(8, "Password is too short - should be 8 characters minimum")
    //    .matches(
    //       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
    //       "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
@@ -18,17 +18,11 @@ const validationLoginWithEmail = Yup.object({
 })
 
 const LoginWithEmail = (props) => {
-   function onSubmit(values) {
-      console.log(values)
-      const { prop1, prop2 } = values
-      props.Login(prop1, prop2)
-   }
-
    return (
       <Formik
          initialValues={props.initialValues}
          validationSchema={validationLoginWithEmail}
-         onSubmit={onSubmit}
+         onSubmit={props.onSubmit}
       >
          <Form>
             <div>
@@ -46,10 +40,10 @@ const LoginWithEmail = (props) => {
                <Field type='password' name='prop2' id='password' />
                <ErrorMessage name='password' component={TextError} />
             </div>
-            <button type='submit'>Login</button>
+            <button type='submit'>Submit</button>
          </Form>
       </Formik>
    )
 }
 
-export default withLogin(LoginWithEmail)
+export default WithLoginFn(LoginWithEmail, "email")

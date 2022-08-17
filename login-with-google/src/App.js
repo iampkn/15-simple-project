@@ -4,7 +4,7 @@ require('dotenv').config
 
 function App() {
 useEffect(()=>{
-console.log("tutu")
+console.log("render")
 },[])
   
   return (

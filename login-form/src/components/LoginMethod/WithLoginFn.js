@@ -1,31 +1,38 @@
-import React, { useState } from "react"
+import React from "react"
 import api from "../../api/axiosCline"
-import { useDispatch } from "react-redux"
-import { login } from "../../store/Slice/useSlice"
+
 
 const initialValues = {
    prop1: "",
    prop2: "",
 }
-
 const LOGIN_URL = "/auth/login"
 
-const WithLoginFn = (WrappedComponent) => {
-   const [errMsg, setErrMsg] = useState()
-   const [typeLogin, setTypeLogin] = useState(0)
-   const dispatch = useDispatch()
+const WithLoginFn = (WrappedComponent, entity) =>({...props}) =>{
+   const WRAPPED = WrappedComponent
 
+   var ErrMsg =null
+  function setErrMsg(err){
+   ErrMsg = err
+  }
+  function onSubmit(values){
+   console.log(values)
+      const { prop1, prop2 } = values
+      Login(prop1, prop2)
+  }
+  
    async function Login(prop1, prop2) {
       try {
          console.log("Login")
          const response = await api.post(
             LOGIN_URL,
-            JSON.stringify({ email: prop1, password: prop2 }),
+            JSON.stringify({ [entity.toString()]: prop1, password: prop2 }),
             {
                headers: { "Content-Type": "application/json" },
             }
          )
-         dispatch(login(response.data))
+         console.log(response.data)
+      
       } catch (error) {
          if (!error?.response) {
             setErrMsg("No sever response")
@@ -38,15 +45,14 @@ const WithLoginFn = (WrappedComponent) => {
          }
       }
    }
-
-   function changeLoginType() {
-      setTypeLogin(!typeLogin)
-   }
+console.log(ErrMsg)
+  
 
    return (
       <div>
-         <button onClick={changeLoginType}>Login with username</button>
-         <WrappedComponent Login={Login} />
+         <button >Login with username</button>
+         <h1>{ErrMsg ? ErrMsg : null}</h1>
+         <WRAPPED Login={Login} {...props} initialValues={initialValues} onSubmit={onSubmit}  />
       </div>
    )
 }

@@ -1,54 +1,89 @@
-import React, { Component } from "react"
+import React, { useState } from "react"
 import withLogin from "../withLogin"
 import { Formik, Form, Field, ErrorMessage } from "formik"
-import TextError from "../../TextError"
 import * as Yup from "yup"
+import TextError from "../../TextError"
+import { useDispatch } from "react-redux"
+import { login } from "../../../store/Slice/useSlice"
+import api from "../../../api/axiosCline"
 
-class LoginWithUserName extends Component {
-   render() {
-      const validationLoginWithUserName = Yup.object({
-         prop1: Yup.string().required("Please enter your username"),
-         // password: Yup.string()
-         //    .required("Please enter your password")
-         //    .min(8, "Password is too short - should be 8 characters minimun")
-         //    .matches(
-         //       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-         //       "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-         //    ),
-      })
-      function onSubmit(values) {
-         console.log(values)
-         const { prop1, prop2 } = values
-         Login(prop1, prop2)
-      }
-      const { Login } = this.props
-      return (
-         <Formik
-            initialValues={this.props.initialValues}
-            validationSchema={validationLoginWithUserName}
-            onSubmit={onSubmit}
-         >
-            <Form>
-               <div>
-                  <h1>Login form</h1>
-                  <h1>{this.props.ErrMsg ? this.props.ErrMsg : null}</h1>
-               </div>
-
-               <div>
-                  <label htmlFor='prop1'>User Name</label>
-                  <Field type='text' name='prop1' id='prop1' />
-                  <ErrorMessage name='prop1' component={TextError} />
-               </div>
-               <div>
-                  <label htmlFor='password'>Password</label>
-                  <Field type='password' name='prop2' id='password' />
-                  <ErrorMessage name='password' component={TextError} />
-               </div>
-               <button type='submit'>Login</button>
-            </Form>
-         </Formik>
-      )
-   }
+const initialValues = {
+   username: "",
+   password: "",
 }
 
-export default withLogin(LoginWithUserName)
+const LOGIN_URL = "/auth/login"
+
+const validationLoginWithUserName = Yup.object({
+   username: Yup.string().required("Please enter your username"),
+   // password: Yup.string()
+   //    .required("Please enter your password")
+   //    .min(8, "Password is too short - should be 8 characters minimun")
+   //    .matches(
+   //       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+   //       "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+   //    ),
+})
+const LoginWithUserName = () => {
+   const [errMsg, setErrMsg] = useState()
+   const dispatch = useDispatch()
+
+   const onSubmit = (values) => {
+      console.log("Login")
+      Login(values)
+   }
+   async function Login(values) {
+      const { username, password } = values
+      try {
+         const response = await api.post(
+            LOGIN_URL,
+
+            JSON.stringify({ username, password }),
+            {
+               headers: { "Content-Type": "application/json" },
+            }
+         )
+         const data = response.data
+         console.log(data)
+         dispatch(login(data))
+      } catch (error) {
+         if (!error?.response) {
+            setErrMsg("No sever response")
+         } else if (error.response?.status === 400) {
+            setErrMsg("Wrong Email or Password")
+         } else if (error.response?.status === 401) {
+            setErrMsg("Unauthorized")
+         } else {
+            setErrMsg("Login Failed")
+         }
+      }
+   }
+   return (
+      <Formik
+         initialValues={initialValues}
+         validationSchema={validationLoginWithUserName}
+         onSubmit={onSubmit}
+      >
+         <Form>
+            <div>
+               <h1>Login form</h1>
+               <h1>{errMsg ? errMsg : null}</h1>
+            </div>
+
+            <div>
+               <label htmlFor='username'>User Name</label>
+               <Field type='text' name='username' id='username' />
+               <ErrorMessage name='username' component={TextError} />
+            </div>
+            <div>
+               <label htmlFor='password'>Password</label>
+               <Field type='password' name='password' id='password' />
+               <ErrorMessage name='password' component={TextError} />
+            </div>
+            <button type='submit'>Login</button>
+         </Form>
+      </Formik>
+   )
+}
+
+export default withLogin(LoginWithUserName,"username")
