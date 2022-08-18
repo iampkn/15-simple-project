@@ -45,7 +45,7 @@ function Register() {
          }
       )
       console.log("Post data", response)
-      if (response.status === 201) {
+      if (response.status === 200) {
          setMsg("Congratulations, your account has been successfully created.")
          setInterval(() => {
             window.location.href = "/"
@@ -62,14 +62,14 @@ function Register() {
             <h1>Register form</h1>
             {msg ? msg : null}
             <div>
-               <label htmlFor='username'>User Name</label>
-               <Field type='text' name='username' id='username' />
-               <ErrorMessage name='username' component={TextError} />
-            </div>
-            <div>
                <label htmlFor='email'>Email</label>
                <Field type='email' name='email' id='email' />
                <ErrorMessage name='email' component={TextError} />
+            </div>
+            <div>
+               <label htmlFor='username'>User Name</label>
+               <Field type='text' name='username' id='username' />
+               <ErrorMessage name='username' component={TextError} />
             </div>
             <div>
                <label htmlFor='password'>Password</label>
