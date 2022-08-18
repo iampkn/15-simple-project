@@ -4,11 +4,13 @@ import LoginWithEmail from "./components/LoginMethod/LoginType/LoginWithEmail"
 import LoginWithUserName from "./components/LoginMethod/LoginType/LoginWithUserName"
 import HomePage from "./components/Pages/HomePage/HomePage"
 import Register from "./components/Register/Register"
+import PrivateRouters from "./utils/PrivateRouters"
 
 function App() {
    return (
       <div className='App'>
          <Routes>
+            <Route element={<PrivateRouters />}></Route>
             <Route path='/' element={<HomePage />} />
             <Route path='/login' element={<ControlLogin />} />
             <Route path='/login/email' element={<LoginWithEmail />} />
