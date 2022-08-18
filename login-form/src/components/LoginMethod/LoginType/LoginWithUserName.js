@@ -1,51 +1,33 @@
 import React, { useState } from "react"
-import withLogin from "../withLogin"
+import WithLoginFn from "../WithLoginFn"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import TextError from "../../TextError"
 import { useDispatch } from "react-redux"
 import { login } from "../../../store/Slice/useSlice"
-import api from "../../../api/axiosCline"
-
-const initialValues = {
-   username: "",
-   password: "",
-}
-
-const LOGIN_URL = "/auth/login"
 
 const validationLoginWithUserName = Yup.object({
-   username: Yup.string().required("Please enter your username"),
-   // password: Yup.string()
+   prop1: Yup.string().required("Please enter your username"),
+   // prop2: Yup.string()
    //    .required("Please enter your password")
-   //    .min(8, "Password is too short - should be 8 characters minimun")
+   //    .min(8, "Password is too short - should be 8 characters minimum")
    //    .matches(
    //       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
    //       "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
    //    ),
 })
-const LoginWithUserName = () => {
+const LoginWithUserName = (props) => {
+   const { Login, initialValues } = props
    const [errMsg, setErrMsg] = useState()
    const dispatch = useDispatch()
 
-   const onSubmit = (values) => {
-      console.log("Login")
-      Login(values)
-   }
-   async function Login(values) {
-      const { username, password } = values
+   async function handleSubmit(values) {
+      console.log(values)
+      const { prop1, prop2 } = values
       try {
-         const response = await api.post(
-            LOGIN_URL,
-
-            JSON.stringify({ username, password }),
-            {
-               headers: { "Content-Type": "application/json" },
-            }
-         )
-         const data = response.data
-         console.log(data)
-         dispatch(login(data))
+         const response = await Login(prop1, prop2)
+         console.log(response.data)
+         dispatch(login(response.data))
       } catch (error) {
          if (!error?.response) {
             setErrMsg("No sever response")
@@ -58,12 +40,12 @@ const LoginWithUserName = () => {
          }
       }
    }
+
    return (
       <Formik
          initialValues={initialValues}
          validationSchema={validationLoginWithUserName}
-         onSubmit={onSubmit}
-      >
+         onSubmit={handleSubmit}>
          <Form>
             <div>
                <h1>Login form</h1>
@@ -71,19 +53,19 @@ const LoginWithUserName = () => {
             </div>
 
             <div>
-               <label htmlFor='username'>User Name</label>
-               <Field type='text' name='username' id='username' />
-               <ErrorMessage name='username' component={TextError} />
+               <label htmlFor='username'>Username</label>
+               <Field type='text' name='prop1' id='username' />
+               <ErrorMessage name='prop1' component={TextError} />
             </div>
             <div>
                <label htmlFor='password'>Password</label>
-               <Field type='password' name='password' id='password' />
-               <ErrorMessage name='password' component={TextError} />
+               <Field type='password' name='prop2' id='password' />
+               <ErrorMessage name='prop2' component={TextError} />
             </div>
-            <button type='submit'>Login</button>
+            <button type='submit'>Submit</button>
          </Form>
       </Formik>
    )
 }
 
-export default withLogin(LoginWithUserName,"username")
+export default WithLoginFn(LoginWithUserName, "username")

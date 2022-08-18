@@ -37,15 +37,15 @@ function Register() {
 
    async function handlePost(values) {
       const { username, email, password } = values
-      const respose = await api.post(
+      const response = await api.post(
          "/users",
          JSON.stringify({ username, email, password }),
          {
             headers: { "Content-type": "application/json" },
          }
       )
-      console.log("Post data", respose)
-      if (respose.status === 201) {
+      console.log("Post data", response)
+      if (response.status === 201) {
          setMsg("Congratulations, your account has been successfully created.")
       }
    }
@@ -54,8 +54,7 @@ function Register() {
       <Formik
          initialValues={initialValues}
          validationSchema={validationSchema}
-         onSubmit={onSubmit}
-      >
+         onSubmit={onSubmit}>
          <Form>
             <h1>Register form</h1>
             {msg ? msg : null}
