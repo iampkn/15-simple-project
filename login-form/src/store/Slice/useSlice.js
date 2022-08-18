@@ -4,14 +4,14 @@ export const userSlice = createSlice({
    name: "user",
    initialState: {
       access_token: null,
-      user: [],
-      plan: null,
+      user: {},
+      plan: {},
    },
    reducers: {
       login: (state, action) => {
-         state.access_token = action.payload.token
-         state.user = action.payload.user
-         state.plan = action.payload.plan
+         state.access_token = action.payload.data.access_token
+         state.user = action.payload.data.user
+         state.plan = action.payload.data.plan
       },
       logout: (state, action) => {
          state.access_token = null
@@ -20,7 +20,7 @@ export const userSlice = createSlice({
 })
 
 export const { login, logout } = userSlice.actions
-export const selectAccToken = (state) => state.user.token
+export const selectAccToken = (state) => state.user.access_token
 export const selectUserData = (state) => state.user.user
 export const selectPlan = (state) => state.user.plan
 export default userSlice.reducer

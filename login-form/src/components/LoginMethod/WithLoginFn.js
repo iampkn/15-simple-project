@@ -1,11 +1,11 @@
 import React from "react"
-import api from "../../api/axiosCline"
+import api from "../../api/axiosClient"
 
 const initialValues = {
    prop1: "",
    prop2: "",
 }
-const LOGIN_URL = "/auth/login"
+const LOGIN_URL = "/user/login"
 
 const WithLoginFn =
    (WrappedComponent, entity) =>

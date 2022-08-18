@@ -1,16 +1,16 @@
-import { useSelector } from "react-redux"
-//import Login from "./components/Login"
-import LoginWithEmail from "./components/LoginMethod/LoginType/LoginWithEmail"
-import LoginWithUserName from "./components/LoginMethod/LoginType/LoginWithUserName"
-//import { Logout } from "./components/Logout"
-import { selectAccToken } from "./store/Slice/useSlice"
+import { Route, Routes } from "react-router-dom"
+import ControlLogin from "./components/ControlLogin"
+import HomePage from "./components/Pages/HomePage"
+import Register from "./components/Register/Register"
 
 function App() {
-   const user = useSelector(selectAccToken)
    return (
       <div className='App'>
-         {/* {user ? <Logout /> : <LoginWithEmail />} */}
-         <LoginWithEmail />
+         <Routes>
+            <Route path='/' element={<HomePage />} />
+            <Route path='/login' element={<ControlLogin />} />
+            <Route path='/register' element={<Register />} />
+         </Routes>
       </div>
    )
 }
