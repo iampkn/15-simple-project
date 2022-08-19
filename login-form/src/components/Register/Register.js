@@ -1,8 +1,10 @@
 import React, { useState } from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
+import { useDispatch } from "react-redux"
 import * as Yup from "yup"
 import TextError from "../TextError"
 import api from "../../api/axiosClient"
+import { login } from "../../store/Slice/useSlice"
 
 const initialValues = {
    username: "",
@@ -29,6 +31,7 @@ const validationSchema = Yup.object({
 
 function Register() {
    const [msg, setMsg] = useState()
+   const dispatch = useDispatch()
 
    const onSubmit = (values) => {
       console.log("Wait for post")
@@ -37,19 +40,23 @@ function Register() {
 
    async function handlePost(values) {
       const { username, email, password } = values
-      const response = await api.post(
-         "/user/register",
-         JSON.stringify({ username, email, password }),
-         {
-            headers: { "Content-Type": "application/json" },
+      try {
+         const response = await api.post(
+            "/user/register",
+            JSON.stringify({ username, email, password }),
+            {
+               headers: { "Content-Type": "application/json" },
+            }
+         )
+         dispatch(login(response.data))
+         console.log("Post data", response)
+         window.location.href = "/registerSuccess"
+      } catch (error) {
+         if (!error?.response) {
+            setMsg("No sever response")
+         } else {
+            setMsg(error.response?.data.message)
          }
-      )
-      console.log("Post data", response)
-      if (response.status === 200) {
-         setMsg("Congratulations, your account has been successfully created.")
-         setInterval(() => {
-            window.location.href = "/"
-         }, 5000)
       }
    }
 
@@ -87,7 +94,7 @@ function Register() {
                <ErrorMessage name='passwordConfirm' component={TextError} />
             </div>
 
-            <button type='submit'>Login</button>
+            <button type='submit'>Create AIOZ W3S account</button>
          </Form>
       </Formik>
    )

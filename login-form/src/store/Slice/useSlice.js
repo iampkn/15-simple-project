@@ -14,7 +14,7 @@ export const userSlice = createSlice({
          state.plan = action.payload.data.plan
       },
       logout: (state, action) => {
-         state.access_token = null
+         localStorage.clear()
       },
    },
 })

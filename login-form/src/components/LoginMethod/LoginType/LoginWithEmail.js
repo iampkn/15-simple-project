@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import WithLoginFn from "../WithLoginFn"
+import { useLocation, useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
@@ -10,19 +11,16 @@ const validationLoginWithEmail = Yup.object({
    prop1: Yup.string()
       .email("Invalid email")
       .required("Please enter your email"),
-   // prop2: Yup.string()
-   //    .required("Please enter your password")
-   //    .min(8, "Password is too short - should be 8 characters minimum")
-   //    .matches(
-   //       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-   //       "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-   //    ),
 })
 
 const LoginWithEmail = (props) => {
    const { Login, initialValues } = props
    const [errMsg, setErrMsg] = useState()
-   const dispatch = useDispatch()
+   const dispatch = useDispatch(-2)
+   const navigate = useNavigate()
+   const location = useLocation()
+   const from = location.state?.from?.pathname || "/"
+   console.log(from)
 
    async function handleSubmit(values) {
       console.log(values)
@@ -31,15 +29,16 @@ const LoginWithEmail = (props) => {
          const response = await Login(prop1, prop2)
          console.log(response.data)
          dispatch(login(response.data))
+         navigate(from, { replace: true })
       } catch (error) {
          if (!error?.response) {
-            setErrMsg("No sever response")
+            setErrMsg(error.response?.data.message)
          } else if (error.response?.status === 400) {
-            setErrMsg("Wrong Email or Password")
+            setErrMsg(error.response?.data.message)
          } else if (error.response?.status === 401) {
-            setErrMsg("Unauthorized")
+            setErrMsg(error.response?.data.message)
          } else {
-            setErrMsg("Login Failed")
+            setErrMsg(error.response?.data.message)
          }
       }
    }
