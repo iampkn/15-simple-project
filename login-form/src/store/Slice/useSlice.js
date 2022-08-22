@@ -6,6 +6,8 @@ export const userSlice = createSlice({
       access_token: null,
       user: {},
       plan: {},
+      message: null,
+      isLoading: false,
    },
    reducers: {
       login: (state, action) => {
@@ -13,7 +15,7 @@ export const userSlice = createSlice({
          state.user = action.payload.data.user
          state.plan = action.payload.data.plan
       },
-      logout: (state, action) => {
+      logout: (state) => {
          localStorage.clear()
       },
    },

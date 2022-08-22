@@ -1,11 +1,15 @@
 import React from "react"
+import { Link, useLocation } from "react-router-dom"
 
 const ControlLogin = () => {
+   const location = useLocation()
    return (
       <div>
-         <a href='/login/email'>Login with email</a>
+         <Link to='/login/email' state={location.state}>
+            Login with email
+         </Link>
          <br></br>
-         <a href='/login/username'>Login with username</a>
+         <Link to='/login/username'>Login with username</Link>
       </div>
    )
 }

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { selectAccToken } from "../../../store/Slice/useSlice"
 import NavUser from "../../NavUser/NavUser"
+import TransferForm from "../../TransferForm/TransferForm"
 const HomePage = () => {
    const access_token = useSelector(selectAccToken)
    const Unlogin = [
@@ -82,6 +83,9 @@ const HomePage = () => {
                </li>
             </ul>
          </nav>
+         <div>
+            <TransferForm />
+         </div>
       </div>
    )
 }

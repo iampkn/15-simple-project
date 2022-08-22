@@ -16,7 +16,7 @@ const validationLoginWithEmail = Yup.object({
 const LoginWithEmail = (props) => {
    const { Login, initialValues } = props
    const [errMsg, setErrMsg] = useState()
-   const dispatch = useDispatch(-2)
+   const dispatch = useDispatch()
    const navigate = useNavigate()
    const location = useLocation()
    const from = location.state?.from?.pathname || "/"

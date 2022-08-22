@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit"
+import createSagaMiddleware from "redux-saga"
 import userReducer from "../store/Slice/useSlice"
 import storage from "redux-persist/lib/storage"
 import {
@@ -18,7 +19,7 @@ const persistConfig = {
 }
 
 const persistedReducer = persistReducer(persistConfig, userReducer)
-
+const saga = createSagaMiddleware()
 const store = configureStore({
    reducer: {
       user: persistedReducer,
@@ -28,7 +29,7 @@ const store = configureStore({
          serializableCheck: {
             ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
          },
-      }),
+      }).concat(saga),
 })
 
 export const persistor = persistStore(store)
