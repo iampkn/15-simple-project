@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useCallback } from "react"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import { useSelector } from "react-redux"
 import * as Yup from "yup"
@@ -15,21 +15,24 @@ const initialValues = {
 
 const TransferForm = () => {
    const userPlan = useSelector(selectPlan)
+
    function checkSizeFile(files) {
-      console.log(files)
       let valid = true
+      console.log(files)
       if (files) {
-         const totalSize = Array.isArray(files)
-            ? files.reduce((total, file) => {
-                 return total + file.size
-              }, 0)
-            : null
+         const FileArray = Object.values(files)
+         const totalSize = FileArray.reduce((total, file) => {
+            return total + file.size
+         }, 0)
+
          if ((totalSize / 1073741824).toFixed(2) > userPlan.size_limit) {
             valid = false
          }
       }
+      console.log(valid)
       return valid
    }
+
    const validationSchema = Yup.object().shape({
       files: Yup.mixed()
          .required("Don't forget to attack your file")
@@ -42,10 +45,16 @@ const TransferForm = () => {
       sender: Yup.string().email().required("Please enter your email"),
       title: Yup.string(),
    })
-   function handleSubmit(values) {
+
+   function handleSubmit(values, onSubmitProps) {
       if (window.confirm("Do you trust me") === true) {
          console.log(values)
+
+         onSubmitProps.setSubmitting(false)
       }
+   }
+   window.onbeforeunload = function () {
+      return "Data will be lost if you leave the page, are you sure?"
    }
    return (
       <Formik
@@ -53,7 +62,7 @@ const TransferForm = () => {
          validationSchema={validationSchema}
          onSubmit={handleSubmit}
          validateOnMount>
-         {({ setFieldValue, dirty, isSubmitting }) => {
+         {(formik) => {
             return (
                <Form>
                   <div>
@@ -62,7 +71,7 @@ const TransferForm = () => {
                         type='file'
                         id='files'
                         onChange={(e) => {
-                           setFieldValue("files", e.target.files[0])
+                           setFieldValue("files", e.target.files)
                         }}
                         multiple
                      />
@@ -88,7 +97,9 @@ const TransferForm = () => {
                      <Field type='text' name='message' id='message' />
                      <ErrorMessage name='message' component={TextError} />
                   </div>
-                  <button type='submit' disabled={!(dirty && isSubmitting)}>
+                  <button
+                     type='submit'
+                     disabled={!formik.dirty || formik.isSubmitting}>
                      Transfers
                   </button>
                </Form>
