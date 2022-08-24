@@ -17,4 +17,6 @@ html{
   box-sizing: border-box;
   font-family: "Manrope";
   font-style: normal;
+  margin: 0;
+  padding: 0;
  }
